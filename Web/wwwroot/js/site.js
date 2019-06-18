@@ -1,64 +1,68 @@
-﻿ webix.ready(function(){
+﻿'use strict';
 
-        webix.ui({
-            view:"filemanager",
-            id:"files"
-        });
-        //
-        // $$("files").parse([
-        //     {id: "files", value: "Files", open: true,  type: "folder", date:  new Date(2014,2,10,16,10), data:[
-        //             { id: "documents", value: "Documents", date:  new Date(2014,2,10,16,10),  type: "folder", open: true, data:[
-        //                     {id: "presentations", value: "Presentations", type: "folder", date:  new Date(2014,2,10,16,10), data:[
-        //                             {id: "pres1", value: "October 2014.ppt", type:"pp", date: new Date(2014,2,10,16,10), size: "12830"},
-        //                             {id: "pres2", value: "June 2014.ppt",  type:"pp", date:  new Date(2014,2,10,16,10), size: "20100"},
-        //                             {id: "pres3", value: "April 2014.ppt", type:"pp", date:  new Date(2014,2,10,16,10), size: "15750"}
-        //                         ]},
-        //                     {id: "reports", value: "Reports",  type: "folder", date: new Date(2014,2,10,16,10), open: true, data:[
-        //                             {id: "usa", value: "USA",  type: "folder", date:  new Date(2014,2,10,16,10), data:[
-        //                                     {id: "salesUS", value: "Sales USA.ppt",  type:"excel", date: new Date(2014,2,10,16,10), size: "12830"},
-        //                                     {id: "overviewUS", value: "Overview USA.doc",  type:"doc", date:  new Date(2014,2,10,16,10), size: "15030"},
-        //                                     {id: "pricesUS", value: "Prices USA.ppt", type:"excel",  date:  new Date(2014,2,10,16,10), size: "15830"},
-        //                                     {id: "productsUS", value: "Products USA.ppt",  type:"excel", date:  new Date(2014,2,10,16,10), size: "20830"}
-        //                                 ]},
-        //                             {id: "europe", value: "Europe",  type: "folder", date:  new Date(2014,2,10,16,10), data:[
-        //                                     {id: "salesEurope", value: "Sales Europe.ppt",  type:"archive", date:  new Date(2014,2,10,16,10), size: "12830"},
-        //                                     {id: "pricesEurope", value: "Prices Europe.ppt", type:"excel",  date:  new Date(2014,2,10,16,10), size: "15830"},
-        //                                     {id: "productsEurope", value: "Products Europe.ppt", type:"excel",  date:  new Date(2014,2,10,16,10), size: "20830"},
-        //                                     {id: "overviewEurope", value: "Overview Europe.doc",  type:"doc", date:  new Date(2014,2,10,16,10), size: "15030"}
-        //                                 ]},
-        //                             {id: "asia", value: "Asia",  type: "folder", date:  new Date(2014,2,10,16,10), data:[
-        //                                     {id: "salesAsia", value: "Sales Asia.ppt", type:"excel",  date:  new Date(2014,2,10,16,10), size: "12083"},
-        //                                     {id: "pricesAsia", value: "Prices Asia.ppt",  type:"excel", date:  new Date(2014,2,10,16,10), size: "15830"},
-        //                                     {id: "overviewAsia", value: "Overview Asia.doc",  type:"doc", date:  new Date(2014,2,10,16,10), size: "15030"},
-        //                                     {id: "productsAsia", value: "Products Asia.ppt",  type:"excel", date:  new Date(2014,2,10,16,10), size: "20830"}
-        //                                 ]}
-        //                         ]}
-        //                 ]},
-        //             { id: "images", value: "Images", type: "folder", date:  new Date(2014,2,10,16,12), open: true, data:[
-        //                     {id: "thumbnails", value: "Thumbnails", type: "folder", date:  new Date(2014,2,10,16,12), data:[
-        //                             {id: "thumbnails1", value: "Product 1-th.jpg", type:"image", date:  new Date(2014,2,10,16,12), size: "34.83 KB"},
-        //                             {id: "thumbnails2", value: "Product 2-th.jpg", type:"image", date:  new Date(2014,2,10,16,12), size: "40.10 KB"},
-        //                             {id: "thumbnails3", value: "Product 3-th.jpg", type:"image", date:  new Date(2014,2,10,16,12), size: "33.75 KB"},
-        //                             {id: "thumbnails4", value: "Product 4-th.jpg", type:"image", date:  new Date(2014,2,10,16,12), size: "35.13 KB"},
-        //                             {id: "thumbnails5", value: "Product 5-th.jpg", type:"image", date:  new Date(2014,2,10,16,12), size: "34.72  KB"},
-        //                             {id: "thumbnails6", value: "Product 6-th.jpg", type:"image", date:  new Date(2014,2,10,16,12), size: "37.06  KB"}
-        //                         ]},
-        //                     {id: "base", value: "Base images", type: "folder", date:  new Date(2014,2,10,16,12), data:[
-        //                             {id: "base1", value: "Product 1.jpg", type:"image", date:  new Date(2014,2,10,16,12), size: "74.83 KB"},
-        //                             {id: "base2", value: "Product 2.jpg", type:"image", date:  new Date(2014,2,10,16,12), size: "80.10 KB"},
-        //                             {id: "base3", value: "Product 3.jpg", type:"image", date:  new Date(2014,2,10,16,12), size: "73.75 KB"},
-        //                             {id: "base4", value: "Product 4.jpg", type:"image", date:  new Date(2014,2,10,16,12), size: "75.13 KB"},
-        //                             {id: "base5", value: "Product 5.jpg", type:"image", date:  new Date(2014,2,10,16,12), size: "74.72 KB" },
-        //                             {id: "base6", value: "Product 6.jpg", type:"image", date:  new Date(2014,2,10,16,12), size: "77.06 KB"}
-        //                         ]}
-        //                 ]},
-        //             { id: "video", value: "Video", type: "folder", date:  new Date(2014,2,10,16,12), data:[
-        //                     {id: "video1", value: "New Year 2013.avi", icon: "file-video-o", type:"video", date:  new Date(2014,2,10,16,12), size: "25030000", pId: "video" },
-        //                     {id: "video2", value: "Presentation.avi", icon: "file-video-o",type:"video", date:  new Date(2014,2,10,16,12), size: "11072000" , pId: "video"},
-        //                     {id: "video3", value: "Conference.avi", icon: "file-video-o", type:"video", date:  new Date(2014,2,10,16,12), size: "31256000", pId: "video" }
-        //                 ]}
-        //         ]}
-        // ]);
+webix.ready(function () {
 
-     $$("files").load("api/data");
+    webix.ui({
+        view: "filemanager",
+        id: "files",
+        handlers: {
+            "download": "api/download",
+            "upload": "api/upload",
+            "remove": "api/remove"
+        },
+        on: {
+            'onViewInit': function (name, config) {
+                if (name === 'table') {
+                    // an array with columns configuration
+                    var columns = config.columns;
+                    // configuration of a new column
+                    var sizeIndex = -1;
+
+                    for (var i = 0; i < columns.length; i++) {
+                        if (columns[i].header === 'Size') {
+                            sizeIndex = i;
+                            break;
+                        }
+                    }
+
+                    if (sizeIndex > -1) {
+                        columns.splice(sizeIndex, 1)
+                    }
+
+                    var advancedSizeColumn = {
+                        id: 'advancedSize',
+                        header: 'Size',
+                        fillspace: 1,
+                        template: function (obj) {
+                            var value = obj.size;
+                            var isInt = (parseInt(value, 10) === value);
+
+                            // get size label
+                            var labels = webix.i18n.filemanager.sizeLabels; // ["B","KB",...]
+                            var sizeIndex = 0;
+                            
+                            while (value / 1024 > 1) {
+                                value = value / 1024;
+                                sizeIndex++;
+                            }
+                            var label = labels[sizeIndex];
+
+                            // locale format
+                            var getFormattedValue = webix.Number.numToStr({
+                                decimalDelimiter: webix.i18n.decimalDelimiter,
+                                groupDelimiter: webix.i18n.groupDelimiter,
+                                decimalSize: isInt ? 0 : webix.i18n.groupSize
+                            });
+
+                            return getFormattedValue(value) + "" + label;
+                        }
+                    };
+                    // insert a column
+                    webix.toArray(columns).push(advancedSizeColumn);
+                }
+            }
+        }
     });
+
+    $$("files").load("api/data");
+});

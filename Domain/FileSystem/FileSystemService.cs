@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Domain.Commands;
 using NFS;
 
 namespace Domain.FileSystem
@@ -9,15 +11,20 @@ namespace Domain.FileSystem
     public class FileSystemService : IFileSystemService
     {
         private readonly IFileSystem _fileSystem;
+        private readonly IGetFolderSizeCommand<long> _folderSizeCommand;
 
-        public FileSystemService(IFileSystem fileSystem)
+        public FileSystemService(
+            IFileSystem fileSystem,
+            IGetFolderSizeCommand<long> folderSizeCommand)
         {
             _fileSystem = fileSystem;
+            _folderSizeCommand = folderSizeCommand;
         }
 
         private static long TimeToMilliseconds(DateTime time)
         {
-            var milliseconds = new DateTimeOffset(time).ToUnixTimeSeconds();
+            var milliseconds = new DateTimeOffset(time)
+                .ToUnixTimeSeconds();
 
             return milliseconds;
         }
@@ -28,11 +35,13 @@ namespace Domain.FileSystem
                 .EnumerateFileEntries(node);
 
             // TODO: move to the factory
-            
+
             return files.Select(file => new TreeDTO
                 {
                     Id = file.FullName,
-                    Date = TimeToMilliseconds(_fileSystem.GetLastWriteTime(new NPath(file.ToString()))),
+                    Date = TimeToMilliseconds(
+                        _fileSystem
+                            .GetLastWriteTime(new NPath(file.ToString()))),
                     Size = file.Length,
                     Type = "file",
                     Value = file.Name
@@ -59,10 +68,16 @@ namespace Domain.FileSystem
                 var nodeDTO = new TreeDTO
                 {
                     Id = dir.FullName,
-                    Date = TimeToMilliseconds(_fileSystem.GetLastWriteTime(dir.Path)),
-                    Size = 0,
+                    Date = TimeToMilliseconds(
+                        _fileSystem
+                            .GetLastWriteTime(dir.Path)),
+                    Size = _folderSizeCommand
+                        .Execute(
+                            new CommandState(dir.FullName)
+                        )
+                        .GetResult(),
                     Type = "folder",
-                    Value = dir.FullName,
+                    Value = new DirectoryInfo(dir.FullName).Name,
                     Data = data
                 };
 

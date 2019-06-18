@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Domain.Commands;
 using Domain.FileSystem;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -35,6 +36,7 @@ namespace Web
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
+            services.AddScoped<IGetFolderSizeCommand<long>, GetFolderSizeCommand>();
             services.AddScoped<IFileSystem, PhysicalFileSystem>();
             services.AddScoped<IFileSystemService, FileSystemService>();
         }

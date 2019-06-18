@@ -1,7 +1,10 @@
+using System.Threading.Tasks;
+
 namespace Domain.Commands
 {
-    public interface ICommand
+    public interface ICommand<T>
     {
-        bool Execute(CommandState state);
+        Task<IResult<T>> ExecuteAsync(CommandState state);
+        IResult<T> Execute(CommandState state);
     }
 }
