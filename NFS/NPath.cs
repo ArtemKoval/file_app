@@ -2,9 +2,11 @@ using System;
 
 namespace NFS
 {
-    public struct NPath : IEquatable<NPath>, IComparable<NPath>
+    public struct NPath
+        : IEquatable<NPath>,
+            IComparable<NPath>
     {
-        public string Path { get; set; }
+        public string Path { get; }
 
         public NPath(string path)
         {

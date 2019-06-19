@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 namespace Domain.Commands
 {
     public class GetFolderSizeCommand
-        : IGetFolderSizeCommand<long>
+        : IGetFolderSizeCommand<GetFolderSizeResult, long, GetFolderSizeState>
     {
         private static long GetDirectorySize(DirectoryInfo directoryInfo)
         {
@@ -23,29 +23,38 @@ namespace Domain.Commands
             return size;
         }
 
-        public async Task<IResult<long>> ExecuteAsync(CommandState state)
+        public async Task<GetFolderSizeResult> ExecuteAsync(GetFolderSizeState state)
         {
             return await Task.Run(() => Execute(state));
         }
 
-        public IResult<long> Execute(CommandState state)
+        public GetFolderSizeResult Execute(GetFolderSizeState state)
         {
             long size = 0;
 
             try
             {
-                var directoryInfo = new DirectoryInfo(state.Target);
+                var directoryInfo = new DirectoryInfo(state.Target.Path);
 
                 size += GetDirectorySize(directoryInfo);
 
-                return new LongResult(size);
+                Result = new GetFolderSizeResult(true, size);
             }
             catch (Exception e)
             {
                 Console.WriteLine(e);
 
-                return new LongResult(0L);
+                Result = new GetFolderSizeResult(true, 0L);
             }
+
+            return Result;
         }
+
+        public long GetResult()
+        {
+            return (long) Result.Result;
+        }
+
+        public GetFolderSizeResult Result { get; private set; }
     }
 }

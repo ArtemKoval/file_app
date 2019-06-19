@@ -2,10 +2,18 @@ namespace NFS
 {
     public class File : IFileSystemEntry
     {
-        public string Name { get; set; }
-        public long Length { get; set; }
+        public File(string name,
+            long length,
+            NPath path)
+        {
+            Name = name;
+            Length = length;
+            Path = path;
+        }
 
+        public string Name { get; private set; }
+        public long Length { get; private set; }
         public string FullName => Path.Path;
-        public NPath Path { get; set; }
+        public NPath Path { get; private set; }
     }
 }

@@ -50,6 +50,8 @@ namespace NFS
 
         NPath ConvertPathFromInternal(string systemPath);
 
+        NPath PathCombine(NPath path1, NPath path2);
+
         IEnumerable<File> EnumerateFileEntries(NPath path);
 
         IEnumerable<Directory> EnumerateDirectories(NPath path);

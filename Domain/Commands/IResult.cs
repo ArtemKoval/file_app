@@ -1,7 +1,8 @@
 namespace Domain.Commands
 {
-    public interface IResult <out T>
+    public interface IResult
     {
-        T GetResult();
+        bool Success { get; }
+        object Result { get; }
     }
 }

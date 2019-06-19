@@ -8,7 +8,6 @@ namespace NFS
     {
         public void Dispose()
         {
-            
         }
 
         public void CreateDirectory(NPath path)
@@ -16,9 +15,14 @@ namespace NFS
             throw new NotImplementedException();
         }
 
-        public bool DirectoryExists(NPath path)
+        protected virtual bool DirectoryExistsImplementation(NPath path)
         {
             throw new NotImplementedException();
+        }
+
+        public bool DirectoryExists(NPath path)
+        {
+            return DirectoryExistsImplementation(path);
         }
 
         public void MoveDirectory(NPath srcPath, NPath destPath)
@@ -26,9 +30,14 @@ namespace NFS
             throw new NotImplementedException();
         }
 
-        public void DeleteDirectory(NPath path, bool isRecursive)
+        protected virtual void DeleteDirectoryImplementation(NPath path, bool isRecursive)
         {
             throw new NotImplementedException();
+        }
+        
+        public void DeleteDirectory(NPath path, bool isRecursive)
+        {
+            DeleteDirectoryImplementation(path, isRecursive);
         }
 
         public void ReplaceFile(NPath srcPath, NPath destPath, NPath destBackupPath, bool ignoreMetadataErrors)
@@ -46,19 +55,35 @@ namespace NFS
             throw new NotImplementedException();
         }
 
+        protected virtual bool FileExistsImplementation(NPath path)
+        {
+            throw new NotImplementedException();
+        }
+
         public bool FileExists(NPath path)
+        {
+            return FileExistsImplementation(path);
+        }
+
+        protected virtual void DeleteFileImplementation(NPath path)
         {
             throw new NotImplementedException();
         }
 
         public void DeleteFile(NPath path)
         {
+            DeleteFileImplementation(path);
+        }
+
+        protected virtual Stream OpenFileImplementation(NPath path, FileMode mode, FileAccess access,
+            FileShare share = FileShare.None)
+        {
             throw new NotImplementedException();
         }
 
         public Stream OpenFile(NPath path, FileMode mode, FileAccess access, FileShare share = FileShare.None)
         {
-            throw new NotImplementedException();
+            return OpenFileImplementation(path, mode, access, share);
         }
 
         public long GetFileLength(NPath path)
@@ -106,11 +131,11 @@ namespace NFS
             throw new NotImplementedException();
         }
 
-        public virtual DateTime GetLastWriteTimeImplementation(NPath path)
+        protected virtual DateTime GetLastWriteTimeImplementation(NPath path)
         {
             throw new NotImplementedException();
         }
-        
+
         public DateTime GetLastWriteTime(NPath path)
         {
             return GetLastWriteTimeImplementation(path);
@@ -126,35 +151,34 @@ namespace NFS
             throw new NotImplementedException();
         }
 
+        protected virtual NPath PathCombineImplementation(NPath path1, NPath path2)
+        {
+            throw new NotImplementedException();
+        }
+        
+        public NPath PathCombine(NPath path1, NPath path2)
+        {
+            return PathCombineImplementation(path1, path2);
+        }
+
+        protected virtual IEnumerable<File> EnumerateFileEntriesImplementation(NPath path)
+        {
+            throw new NotImplementedException();
+        }
+
         public IEnumerable<File> EnumerateFileEntries(NPath path)
         {
-            var files = System.IO.Directory.GetFiles(path.Path);
+            return EnumerateFileEntriesImplementation(path);
+        }
 
-            foreach (var file in files)
-            {
-                // TODO: remove exposed logic to the ctor
-                yield return new File
-                {
-                    Path = new NPath(file),
-                    Length = new FileInfo(file).Length,
-                    Name = Path.GetFileName(file)
-                };
-            }
+        protected virtual IEnumerable<Directory> EnumerateDirectoriesImplementation(NPath path)
+        {
+            throw new NotImplementedException();
         }
 
         public IEnumerable<Directory> EnumerateDirectories(NPath path)
         {
-            var directories = System.IO.Directory.GetDirectories(path.Path);
-
-            foreach (var directory in directories)
-            {
-                yield return new Directory
-                {
-                    Path = new NPath(directory),
-                    Length = directory.Length,
-                    Name = Path.GetDirectoryName(directory)
-                };
-            }
+            return EnumerateDirectoriesImplementation(path);
         }
     }
 }

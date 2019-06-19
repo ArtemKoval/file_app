@@ -8,6 +8,6 @@ namespace NFS
         
         string FullName { get; }
 
-        NPath Path { get; set; }
+        NPath Path { get;}
     }
 }

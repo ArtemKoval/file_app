@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.IO;
 using Domain.Commands;
 using Domain.FileSystem;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -34,11 +30,28 @@ namespace Web
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services
+                .AddMvc()
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
-            services.AddScoped<IGetFolderSizeCommand<long>, GetFolderSizeCommand>();
-            services.AddScoped<IFileSystem, PhysicalFileSystem>();
-            services.AddScoped<IFileSystemService, FileSystemService>();
+            services.AddScoped<
+                IDownloadFileCommand<FileDownloadResult, Stream, DownloadFileState>,
+                DownloadFileCommand>();
+            services.AddScoped<
+                IRemoveCommand<RemoveResult, bool, RemoveState>,
+                RemoveCommand>();
+            services.AddScoped<
+                IUploadFileCommand<FileUploadResult, bool, UploadFileState>,
+                UploadFileCommand>();
+            services.AddScoped<
+                IGetFolderSizeCommand<GetFolderSizeResult, long, GetFolderSizeState>,
+                GetFolderSizeCommand>();
+            services.AddScoped<
+                IFileSystem,
+                PhysicalFileSystem>();
+            services.AddScoped<
+                IFileSystemService,
+                FileSystemService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

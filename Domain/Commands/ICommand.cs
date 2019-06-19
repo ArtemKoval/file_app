@@ -2,9 +2,11 @@ using System.Threading.Tasks;
 
 namespace Domain.Commands
 {
-    public interface ICommand<T>
+    public interface ICommand<T, out TR, in TS>
     {
-        Task<IResult<T>> ExecuteAsync(CommandState state);
-        IResult<T> Execute(CommandState state);
+        Task<T> ExecuteAsync(TS state);
+        T Execute(TS state);
+        TR GetResult();
+        T Result { get; }
     }
 }

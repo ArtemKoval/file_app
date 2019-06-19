@@ -1,9 +1,10 @@
 using System;
-using System.Dynamic;
 using System.IO;
 using System.Threading.Tasks;
+using Domain.Commands;
 using Domain.FileSystem;
 using Microsoft.AspNetCore.Mvc;
+using NFS;
 using Web.DTO;
 
 namespace Web.Controllers
@@ -48,23 +49,16 @@ namespace Web.Controllers
                     return BadRequest("Remove target is not specified");
                 }
 
-                var targets = removeRequest.source.Split(",");
+                var result = await _fileSystemService
+                    .RemoveAsync(
+                        new RemoveState(new NPath(removeRequest.source)));
 
-                foreach (var target in targets)
+                if (result == null)
                 {
-                    if (Directory.Exists(target))
-                    {
-                        var folder = new DirectoryInfo(target);
-                        await Task.Run(() => folder.Delete(true));
-                    }
-                    else if (System.IO.File.Exists(target))
-                    {
-                        var file = new FileInfo(target);
-                        await Task.Run(() => file.Delete());
-                    }
+                    throw new SystemException("Unable to process remove");
                 }
 
-                return NoContent();
+                return Json(result);
             }
             catch (Exception e)
             {
@@ -85,24 +79,19 @@ namespace Web.Controllers
                     return BadRequest("File not selected");
                 }
 
-                var path = Path.Combine(
-                    uploadRequest.target,
-                    uploadRequest.upload_fullpath);
+                var result = await _fileSystemService
+                    .UploadFileAsync(
+                        new UploadFileState(
+                            new NPath(uploadRequest.target),
+                            new NPath(uploadRequest.upload_fullpath),
+                            uploadRequest.upload.OpenReadStream()
+                        ));
 
-                using (var stream = new FileStream(path, FileMode.Create))
+                if (result == null)
                 {
-                    await uploadRequest.upload.CopyToAsync(stream);
+                    throw new SystemException("Unable to process file upload");
                 }
 
-                var result = new
-                {
-                    folder = uploadRequest.target,
-                    value = uploadRequest.upload_fullpath,
-                    id = uploadRequest.upload_fullpath,
-                    type = "file",
-                    status = "server"
-                };
-                
                 return Json(result);
             }
             catch (Exception e)
@@ -123,25 +112,19 @@ namespace Web.Controllers
                     return BadRequest("Filename not present");
                 }
 
-                var path = downloadRequest.source;
+                var result = await _fileSystemService
+                    .DownloadFileAsync(
+                        new DownloadFileState(new NPath(downloadRequest.source)));
 
-                // This solution may result in OutOfMemory exception
-                // for big files. Other solutions may be used instead
-                // (e.g. Response.TransmitFile, manual chunking, setting OutputBuffer size to 0 etc.
-
-                var memory = new MemoryStream();
-
-                using (var stream = new FileStream(path, FileMode.Open))
+                if (result == null)
                 {
-                    await stream.CopyToAsync(memory);
+                    throw new SystemException("Unable to process file download");
                 }
 
-                memory.Position = 0;
-
                 return File(
-                    memory,
+                    result,
                     "application/octet-stream",
-                    Path.GetFileName(path));
+                    Path.GetFileName(downloadRequest.source));
             }
             catch (Exception e)
             {

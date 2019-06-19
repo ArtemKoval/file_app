@@ -11,14 +11,24 @@ namespace Domain.FileSystem
     public class FileSystemService : IFileSystemService
     {
         private readonly IFileSystem _fileSystem;
-        private readonly IGetFolderSizeCommand<long> _folderSizeCommand;
+        private readonly IGetFolderSizeCommand<GetFolderSizeResult, long, GetFolderSizeState> _getFolderSizeCommand;
+        private readonly IUploadFileCommand<FileUploadResult, bool, UploadFileState> _uploadFileCommand;
+        private readonly IRemoveCommand<RemoveResult, bool, RemoveState> _removeCommand;
+        private readonly IDownloadFileCommand<FileDownloadResult, Stream, DownloadFileState> _downloadFileCommand;
 
         public FileSystemService(
             IFileSystem fileSystem,
-            IGetFolderSizeCommand<long> folderSizeCommand)
+            IGetFolderSizeCommand<GetFolderSizeResult, long, GetFolderSizeState> getFolderSizeCommand,
+            IUploadFileCommand<FileUploadResult, bool, UploadFileState> uploadFileCommand,
+            IRemoveCommand<RemoveResult, bool, RemoveState> removeCommand,
+            IDownloadFileCommand<FileDownloadResult, Stream, DownloadFileState> downloadFileCommand
+        )
         {
             _fileSystem = fileSystem;
-            _folderSizeCommand = folderSizeCommand;
+            _getFolderSizeCommand = getFolderSizeCommand;
+            _uploadFileCommand = uploadFileCommand;
+            _removeCommand = removeCommand;
+            _downloadFileCommand = downloadFileCommand;
         }
 
         private static long TimeToMilliseconds(DateTime time)
@@ -43,7 +53,7 @@ namespace Domain.FileSystem
                         _fileSystem
                             .GetLastWriteTime(new NPath(file.ToString()))),
                     Size = file.Length,
-                    Type = "file",
+                    Type = NodeType.File,
                     Value = file.Name
                 })
                 .OrderBy(f => f.Value)
@@ -65,18 +75,20 @@ namespace Domain.FileSystem
                     .OrderBy(f => f.Value)
                     .ToList();
 
+                _getFolderSizeCommand
+                    .Execute(
+                        new GetFolderSizeState(new NPath(dir.FullName))
+                    );
+
                 var nodeDTO = new TreeDTO
                 {
                     Id = dir.FullName,
                     Date = TimeToMilliseconds(
                         _fileSystem
                             .GetLastWriteTime(dir.Path)),
-                    Size = _folderSizeCommand
-                        .Execute(
-                            new CommandState(dir.FullName)
-                        )
+                    Size = _getFolderSizeCommand
                         .GetResult(),
-                    Type = "folder",
+                    Type = NodeType.Folder,
                     Value = new DirectoryInfo(dir.FullName).Name,
                     Data = data
                 };
@@ -92,6 +104,27 @@ namespace Domain.FileSystem
         public async Task<List<TreeDTO>> GetStructureAsync()
         {
             return await Task.Run(() => GetFolderStructure(new NPath(System.IO.Directory.GetCurrentDirectory())));
+        }
+
+        public async Task<object> UploadFileAsync(UploadFileState state)
+        {
+            var result = await _uploadFileCommand.ExecuteAsync(state);
+
+            return result;
+        }
+
+        public async Task<object> RemoveAsync(RemoveState state)
+        {
+            var result = await _removeCommand.ExecuteAsync(state);
+
+            return result;
+        }
+
+        public async Task<Stream> DownloadFileAsync(DownloadFileState state)
+        {
+            await _downloadFileCommand.ExecuteAsync(state);
+
+            return _downloadFileCommand.GetResult();
         }
     }
 }
