@@ -4,6 +4,14 @@ webix.ready(function () {
 
     webix.ui({
         view: "filemanager",
+        ready: function () {
+            this.getMenu().add({
+                id: "download",
+                icon: "webix_icon fa-download",
+                value: "Download",
+                batch: "file"
+            }, 0);
+        },
         id: "files",
         handlers: {
             "download": "api/download",
