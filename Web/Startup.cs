@@ -35,16 +35,19 @@ namespace Web
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
             services.AddScoped<
-                IRenameCommand<RenameResult, bool, RenameState>,
+                ICreateFolderCommand<CreateFolderResult, object, CreateFolderState>,
+                CreateFolderCommand>();
+            services.AddScoped<
+                IRenameCommand<RenameResult, object, RenameState>,
                 RenameCommand>();
             services.AddScoped<
-                IDownloadFileCommand<FileDownloadResult, Stream, DownloadFileState>,
+                IDownloadFileCommand<DownloadFileResult, Stream, DownloadFileState>,
                 DownloadFileCommand>();
             services.AddScoped<
                 IRemoveCommand<RemoveResult, bool, RemoveState>,
                 RemoveCommand>();
             services.AddScoped<
-                IUploadFileCommand<FileUploadResult, bool, UploadFileState>,
+                IUploadFileCommand<UploadFileResult, object, UploadFileState>,
                 UploadFileCommand>();
             services.AddScoped<
                 IGetFolderSizeCommand<GetFolderSizeResult, long, GetFolderSizeState>,

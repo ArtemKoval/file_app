@@ -5,7 +5,7 @@ using NFS;
 namespace Domain.Commands
 {
     public class RenameCommand
-        : IRenameCommand<RenameResult, bool, RenameState>
+        : IRenameCommand<RenameResult, object, RenameState>
     {
         private readonly IFileSystem _fileSystem;
 
@@ -46,7 +46,7 @@ namespace Domain.Commands
                 Result = new RenameResult(true, new
                 {
                     id = destination,
-                    value = state.Target
+                    value = state.Target.Raw
                 });
             }
             catch (Exception e)
@@ -59,9 +59,9 @@ namespace Domain.Commands
             return Result;
         }
 
-        public bool GetResult()
+        public object GetResult()
         {
-            throw new NotImplementedException();
+            return Result.Result;
         }
 
         public RenameResult Result { get; private set; }

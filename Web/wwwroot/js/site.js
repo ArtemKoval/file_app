@@ -9,7 +9,8 @@ webix.ready(function () {
             "download": "api/download",
             "upload": "api/upload",
             "remove": "api/remove",
-            "rename": "api/rename"
+            "rename": "api/rename",
+            "create": "api/create"
         },
         on: {
             'onViewInit': function (name, config) {

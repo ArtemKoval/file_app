@@ -5,14 +5,14 @@ using System.Threading.Tasks;
 namespace Domain.Commands
 {
     public class DownloadFileCommand
-        : IDownloadFileCommand<FileDownloadResult, Stream, DownloadFileState>
+        : IDownloadFileCommand<DownloadFileResult, Stream, DownloadFileState>
     {
-        public async Task<FileDownloadResult> ExecuteAsync(DownloadFileState state)
+        public async Task<DownloadFileResult> ExecuteAsync(DownloadFileState state)
         {
             return await Task.Run(() => Execute(state));
         }
 
-        public FileDownloadResult Execute(DownloadFileState state)
+        public DownloadFileResult Execute(DownloadFileState state)
         {
             // This solution may result in OutOfMemory exception
             // for big files. Other solutions may be used instead
@@ -29,13 +29,13 @@ namespace Domain.Commands
 
                 memory.Position = 0;
 
-                Result = new FileDownloadResult(true, memory);
+                Result = new DownloadFileResult(true, memory);
             }
             catch (Exception e)
             {
                 Console.WriteLine(e);
 
-                Result = new FileDownloadResult(false, null);
+                Result = new DownloadFileResult(false, null);
             }
 
             return Result;
@@ -46,6 +46,6 @@ namespace Domain.Commands
             return (MemoryStream) Result.Result;
         }
 
-        public FileDownloadResult Result { get; private set; }
+        public DownloadFileResult Result { get; private set; }
     }
 }

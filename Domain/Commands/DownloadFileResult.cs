@@ -1,9 +1,9 @@
 namespace Domain.Commands
 {
-    public class FileUploadResult : IResult
+    public class DownloadFileResult: IResult
     {
-        public FileUploadResult(bool success,
-         object result)
+        public DownloadFileResult(bool success,
+            object result)
         {
             Success = success;
             Result = result;

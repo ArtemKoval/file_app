@@ -7,7 +7,7 @@ using NFS;
 namespace Domain.Commands
 {
     public class UploadFileCommand
-        : IUploadFileCommand<FileUploadResult, bool, UploadFileState>
+        : IUploadFileCommand<UploadFileResult, object, UploadFileState>
     {
         private readonly IFileSystem _fileSystem;
 
@@ -16,12 +16,12 @@ namespace Domain.Commands
             _fileSystem = fileSystem;
         }
 
-        public async Task<FileUploadResult> ExecuteAsync(UploadFileState state)
+        public async Task<UploadFileResult> ExecuteAsync(UploadFileState state)
         {
             return await Task.Run(() => Execute(state));
         }
 
-        public FileUploadResult Execute(UploadFileState state)
+        public UploadFileResult Execute(UploadFileState state)
         {
             try
             {
@@ -38,11 +38,11 @@ namespace Domain.Commands
                     state.Stream.CopyTo(stream);
                 }
 
-                Result = new FileUploadResult(true, new
+                Result = new UploadFileResult(true, new
                 {
-                    folder = state.Target.Raw,
+                    folder = Path.GetFileName( Path.GetDirectoryName(path.Raw)),
                     value = state.FileName.Raw,
-                    id = state.FileName.Raw,
+                    id = path.Raw,
                     type = NodeType.File,
                     status = "server"
                 });
@@ -51,17 +51,17 @@ namespace Domain.Commands
             {
                 Console.WriteLine(e);
 
-                Result = new FileUploadResult(false, null);
+                Result = new UploadFileResult(false, null);
             }
 
             return Result;
         }
 
-        public bool GetResult()
+        public object GetResult()
         {
-            throw new NotImplementedException();
+            return Result.Result;
         }
 
-        public FileUploadResult Result { get; private set; }
+        public UploadFileResult Result { get; private set; }
     }
 }

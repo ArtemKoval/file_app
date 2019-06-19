@@ -101,6 +101,42 @@ namespace Web.Controllers
                 return BadRequest(e);
             }
         }
+        
+        [HttpPost]
+        [Route("api/create")]
+        public async Task<IActionResult> Create(
+            [FromForm] CreateRequest createRequest)
+        {
+            try
+            {
+                if (createRequest.source == null)
+                {
+                    return BadRequest("Create source is not specified");
+                }
+                
+                if (createRequest.target == null)
+                {
+                    return BadRequest("Create target is not specified");
+                }
+
+                var result = await _fileSystemService
+                    .CreateFolderAsync(
+                        new CreateFolderState(
+                            new NPath(createRequest.target),
+                            new NPath(createRequest.source)));
+
+                if (result == null)
+                {
+                    throw new SystemException("Unable to process create");
+                }
+
+                return Json(result);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
+        }
 
         [HttpPost]
         [Route("api/upload")]

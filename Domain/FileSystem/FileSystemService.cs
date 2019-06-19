@@ -12,18 +12,20 @@ namespace Domain.FileSystem
     {
         private readonly IFileSystem _fileSystem;
         private readonly IGetFolderSizeCommand<GetFolderSizeResult, long, GetFolderSizeState> _getFolderSizeCommand;
-        private readonly IUploadFileCommand<FileUploadResult, bool, UploadFileState> _uploadFileCommand;
+        private readonly IUploadFileCommand<UploadFileResult, object, UploadFileState> _uploadFileCommand;
         private readonly IRemoveCommand<RemoveResult, bool, RemoveState> _removeCommand;
-        private readonly IDownloadFileCommand<FileDownloadResult, Stream, DownloadFileState> _downloadFileCommand;
-        private readonly IRenameCommand<RenameResult, bool, RenameState> _renameCommand;
+        private readonly IDownloadFileCommand<DownloadFileResult, Stream, DownloadFileState> _downloadFileCommand;
+        private readonly IRenameCommand<RenameResult, object, RenameState> _renameCommand;
+        private readonly ICreateFolderCommand<CreateFolderResult, object, CreateFolderState> _createFolderCommand;
 
         public FileSystemService(
             IFileSystem fileSystem,
             IGetFolderSizeCommand<GetFolderSizeResult, long, GetFolderSizeState> getFolderSizeCommand,
-            IUploadFileCommand<FileUploadResult, bool, UploadFileState> uploadFileCommand,
+            IUploadFileCommand<UploadFileResult, object, UploadFileState> uploadFileCommand,
             IRemoveCommand<RemoveResult, bool, RemoveState> removeCommand,
-            IDownloadFileCommand<FileDownloadResult, Stream, DownloadFileState> downloadFileCommand,
-            IRenameCommand<RenameResult, bool, RenameState> renameCommand
+            IDownloadFileCommand<DownloadFileResult, Stream, DownloadFileState> downloadFileCommand,
+            IRenameCommand<RenameResult, object, RenameState> renameCommand,
+            ICreateFolderCommand<CreateFolderResult, object, CreateFolderState> createFolderCommand
         )
         {
             _fileSystem = fileSystem;
@@ -32,6 +34,7 @@ namespace Domain.FileSystem
             _removeCommand = removeCommand;
             _downloadFileCommand = downloadFileCommand;
             _renameCommand = renameCommand;
+            _createFolderCommand = createFolderCommand;
         }
 
         private static long TimeToMilliseconds(DateTime time)
@@ -111,9 +114,9 @@ namespace Domain.FileSystem
 
         public async Task<object> UploadFileAsync(UploadFileState state)
         {
-            var result = await _uploadFileCommand.ExecuteAsync(state);
+            await _uploadFileCommand.ExecuteAsync(state);
 
-            return result;
+            return _uploadFileCommand.GetResult();
         }
 
         public async Task<object> RemoveAsync(RemoveState state)
@@ -125,9 +128,16 @@ namespace Domain.FileSystem
 
         public async Task<object> RenameAsync(RenameState state)
         {
-            var result = await _renameCommand.ExecuteAsync(state);
+            await _renameCommand.ExecuteAsync(state);
 
-            return result;
+            return _renameCommand.GetResult();
+        }
+
+        public async Task<object> CreateFolderAsync(CreateFolderState state)
+        {
+            await _createFolderCommand.ExecuteAsync(state);
+
+            return _createFolderCommand.GetResult();
         }
 
         public async Task<Stream> DownloadFileAsync(DownloadFileState state)

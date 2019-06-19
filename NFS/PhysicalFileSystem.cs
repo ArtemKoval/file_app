@@ -87,5 +87,10 @@ namespace NFS
         {
             System.IO.File.Move(srcPath.Raw, destPath.Raw);
         }
+
+        protected override void CreateDirectoryImplementation(NPath path)
+        {
+            System.IO.Directory.CreateDirectory(path.Raw);
+        }
     }
 }

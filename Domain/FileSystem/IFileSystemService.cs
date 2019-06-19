@@ -11,6 +11,7 @@ namespace Domain.FileSystem
         Task<object> UploadFileAsync(UploadFileState state);
         Task<object> RemoveAsync(RemoveState state);
         Task<object> RenameAsync(RenameState state);
+        Task<object> CreateFolderAsync(CreateFolderState state);
         Task<Stream> DownloadFileAsync(DownloadFileState state);
     }
 }

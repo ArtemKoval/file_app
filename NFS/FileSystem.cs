@@ -10,9 +10,14 @@ namespace NFS
         {
         }
 
-        public void CreateDirectory(NPath path)
+        protected virtual void CreateDirectoryImplementation(NPath path)
         {
             throw new NotImplementedException();
+        }
+
+        public void CreateDirectory(NPath path)
+        {
+            CreateDirectoryImplementation(path);
         }
 
         protected virtual bool DirectoryExistsImplementation(NPath path)
@@ -39,7 +44,7 @@ namespace NFS
         {
             throw new NotImplementedException();
         }
-        
+
         public void DeleteDirectory(NPath path, bool isRecursive)
         {
             DeleteDirectoryImplementation(path, isRecursive);
@@ -59,7 +64,7 @@ namespace NFS
         {
             throw new NotImplementedException();
         }
-        
+
         public void MoveFile(NPath srcPath, NPath destPath)
         {
             MoveFileImplementation(srcPath, destPath);
@@ -165,7 +170,7 @@ namespace NFS
         {
             throw new NotImplementedException();
         }
-        
+
         public NPath PathCombine(NPath path1, NPath path2)
         {
             return PathCombineImplementation(path1, path2);
