@@ -92,5 +92,10 @@ namespace NFS
         {
             System.IO.Directory.CreateDirectory(path.Raw);
         }
+
+        protected override void CopyFileImplementation(NPath srcPath, NPath destPath, bool overwrite)
+        {
+            System.IO.File.Copy(srcPath.Raw, destPath.Raw, overwrite);
+        }
     }
 }

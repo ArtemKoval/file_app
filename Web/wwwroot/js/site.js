@@ -10,7 +10,8 @@ webix.ready(function () {
             "upload": "api/upload",
             "remove": "api/remove",
             "rename": "api/rename",
-            "create": "api/create"
+            "create": "api/create",
+            "copy": "api/copy"
         },
         on: {
             'onViewInit': function (name, config) {
@@ -42,7 +43,7 @@ webix.ready(function () {
                             // get size label
                             var labels = webix.i18n.filemanager.sizeLabels; // ["B","KB",...]
                             var sizeIndex = 0;
-                            
+
                             while (value / 1024 > 1) {
                                 value = value / 1024;
                                 sizeIndex++;

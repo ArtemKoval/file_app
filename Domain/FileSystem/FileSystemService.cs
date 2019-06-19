@@ -17,6 +17,7 @@ namespace Domain.FileSystem
         private readonly IDownloadFileCommand<DownloadFileResult, Stream, DownloadFileState> _downloadFileCommand;
         private readonly IRenameCommand<RenameResult, object, RenameState> _renameCommand;
         private readonly ICreateFolderCommand<CreateFolderResult, object, CreateFolderState> _createFolderCommand;
+        private readonly ICopyCommand<CopyResult, object, CopyState> _copyCommand;
 
         public FileSystemService(
             IFileSystem fileSystem,
@@ -25,7 +26,8 @@ namespace Domain.FileSystem
             IRemoveCommand<RemoveResult, bool, RemoveState> removeCommand,
             IDownloadFileCommand<DownloadFileResult, Stream, DownloadFileState> downloadFileCommand,
             IRenameCommand<RenameResult, object, RenameState> renameCommand,
-            ICreateFolderCommand<CreateFolderResult, object, CreateFolderState> createFolderCommand
+            ICreateFolderCommand<CreateFolderResult, object, CreateFolderState> createFolderCommand,
+            ICopyCommand<CopyResult, object, CopyState> copyCommand
         )
         {
             _fileSystem = fileSystem;
@@ -35,6 +37,7 @@ namespace Domain.FileSystem
             _downloadFileCommand = downloadFileCommand;
             _renameCommand = renameCommand;
             _createFolderCommand = createFolderCommand;
+            _copyCommand = copyCommand;
         }
 
         private static long TimeToMilliseconds(DateTime time)
@@ -138,6 +141,13 @@ namespace Domain.FileSystem
             await _createFolderCommand.ExecuteAsync(state);
 
             return _createFolderCommand.GetResult();
+        }
+
+        public async Task<object> CopyAsync(CopyState state)
+        {
+            await _copyCommand.ExecuteAsync(state);
+
+            return _copyCommand.GetResult();
         }
 
         public async Task<Stream> DownloadFileAsync(DownloadFileState state)

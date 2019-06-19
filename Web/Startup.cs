@@ -35,6 +35,9 @@ namespace Web
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
             services.AddScoped<
+                ICopyCommand<CopyResult, object, CopyState>,
+                CopyCommand>();
+            services.AddScoped<
                 ICreateFolderCommand<CreateFolderResult, object, CreateFolderState>,
                 CreateFolderCommand>();
             services.AddScoped<

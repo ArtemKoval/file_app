@@ -55,9 +55,14 @@ namespace NFS
             throw new NotImplementedException();
         }
 
-        public void CopyFile(NPath srcPath, NPath destPath, bool overwrite)
+        protected virtual void CopyFileImplementation(NPath srcPath, NPath destPath, bool overwrite)
         {
             throw new NotImplementedException();
+        }
+
+        public void CopyFile(NPath srcPath, NPath destPath, bool overwrite)
+        {
+            CopyFileImplementation(srcPath, destPath, overwrite);
         }
 
         protected virtual void MoveFileImplementation(NPath srcPath, NPath destPath)

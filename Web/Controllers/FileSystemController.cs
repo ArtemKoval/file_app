@@ -65,7 +65,7 @@ namespace Web.Controllers
                 return BadRequest(e);
             }
         }
-        
+
         [HttpPost]
         [Route("api/rename")]
         public async Task<IActionResult> Rename(
@@ -77,7 +77,7 @@ namespace Web.Controllers
                 {
                     return BadRequest("Rename source is not specified");
                 }
-                
+
                 if (renameRequest.target == null)
                 {
                     return BadRequest("Rename target is not specified");
@@ -103,6 +103,42 @@ namespace Web.Controllers
         }
         
         [HttpPost]
+        [Route("api/copy")]
+        public async Task<IActionResult> Copy(
+            [FromForm] CopyRequest copyRequest)
+        {
+            try
+            {
+                if (copyRequest.source == null)
+                {
+                    return BadRequest("Copy source is not specified");
+                }
+
+                if (copyRequest.target == null)
+                {
+                    return BadRequest("Copy target is not specified");
+                }
+
+                var result = await _fileSystemService
+                    .CopyAsync(
+                        new CopyState(
+                            new NPath(copyRequest.target),
+                            new NPath(copyRequest.source)));
+
+                if (result == null)
+                {
+                    throw new SystemException("Unable to process copy");
+                }
+
+                return Json(result);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
+        }
+
+        [HttpPost]
         [Route("api/create")]
         public async Task<IActionResult> Create(
             [FromForm] CreateRequest createRequest)
@@ -113,7 +149,7 @@ namespace Web.Controllers
                 {
                     return BadRequest("Create source is not specified");
                 }
-                
+
                 if (createRequest.target == null)
                 {
                     return BadRequest("Create target is not specified");
