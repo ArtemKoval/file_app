@@ -34,7 +34,7 @@ namespace Domain.Commands
 
             try
             {
-                var directoryInfo = new DirectoryInfo(state.Target.Path);
+                var directoryInfo = new DirectoryInfo(state.Target.Raw);
 
                 size += GetDirectorySize(directoryInfo);
 

@@ -15,13 +15,15 @@ namespace Domain.FileSystem
         private readonly IUploadFileCommand<FileUploadResult, bool, UploadFileState> _uploadFileCommand;
         private readonly IRemoveCommand<RemoveResult, bool, RemoveState> _removeCommand;
         private readonly IDownloadFileCommand<FileDownloadResult, Stream, DownloadFileState> _downloadFileCommand;
+        private readonly IRenameCommand<RenameResult, bool, RenameState> _renameCommand;
 
         public FileSystemService(
             IFileSystem fileSystem,
             IGetFolderSizeCommand<GetFolderSizeResult, long, GetFolderSizeState> getFolderSizeCommand,
             IUploadFileCommand<FileUploadResult, bool, UploadFileState> uploadFileCommand,
             IRemoveCommand<RemoveResult, bool, RemoveState> removeCommand,
-            IDownloadFileCommand<FileDownloadResult, Stream, DownloadFileState> downloadFileCommand
+            IDownloadFileCommand<FileDownloadResult, Stream, DownloadFileState> downloadFileCommand,
+            IRenameCommand<RenameResult, bool, RenameState> renameCommand
         )
         {
             _fileSystem = fileSystem;
@@ -29,6 +31,7 @@ namespace Domain.FileSystem
             _uploadFileCommand = uploadFileCommand;
             _removeCommand = removeCommand;
             _downloadFileCommand = downloadFileCommand;
+            _renameCommand = renameCommand;
         }
 
         private static long TimeToMilliseconds(DateTime time)
@@ -116,6 +119,13 @@ namespace Domain.FileSystem
         public async Task<object> RemoveAsync(RemoveState state)
         {
             var result = await _removeCommand.ExecuteAsync(state);
+
+            return result;
+        }
+
+        public async Task<object> RenameAsync(RenameState state)
+        {
+            var result = await _renameCommand.ExecuteAsync(state);
 
             return result;
         }

@@ -6,11 +6,11 @@ namespace NFS
         : IEquatable<NPath>,
             IComparable<NPath>
     {
-        public string Path { get; }
+        public string Raw { get; }
 
-        public NPath(string path)
+        public NPath(string raw)
         {
-            Path = path;
+            Raw = raw;
         }
         
         public bool Equals(NPath other)

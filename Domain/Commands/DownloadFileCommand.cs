@@ -22,7 +22,7 @@ namespace Domain.Commands
             {
                 var memory = new MemoryStream();
 
-                using (var stream = new FileStream(state.Target.Path, FileMode.Open))
+                using (var stream = new FileStream(state.Target.Raw, FileMode.Open))
                 {
                     stream.CopyTo(memory);
                 }

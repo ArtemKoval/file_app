@@ -65,6 +65,42 @@ namespace Web.Controllers
                 return BadRequest(e);
             }
         }
+        
+        [HttpPost]
+        [Route("api/rename")]
+        public async Task<IActionResult> Rename(
+            [FromForm] RenameRequest renameRequest)
+        {
+            try
+            {
+                if (renameRequest.source == null)
+                {
+                    return BadRequest("Rename source is not specified");
+                }
+                
+                if (renameRequest.target == null)
+                {
+                    return BadRequest("Rename target is not specified");
+                }
+
+                var result = await _fileSystemService
+                    .RenameAsync(
+                        new RenameState(
+                            new NPath(renameRequest.target),
+                            new NPath(renameRequest.source)));
+
+                if (result == null)
+                {
+                    throw new SystemException("Unable to process rename");
+                }
+
+                return Json(result);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
+        }
 
         [HttpPost]
         [Route("api/upload")]

@@ -8,7 +8,7 @@ namespace NFS
     {
         protected override DateTime GetLastWriteTimeImplementation(NPath path)
         {
-            return System.IO.File.GetLastWriteTime(path.Path);
+            return System.IO.File.GetLastWriteTime(path.Raw);
         }
 
         protected override Stream OpenFileImplementation(
@@ -17,22 +17,22 @@ namespace NFS
             FileAccess access,
             FileShare share = FileShare.None)
         {
-            return new FileStream(path.Path, mode, access, share);
+            return new FileStream(path.Raw, mode, access, share);
         }
 
         protected override bool FileExistsImplementation(NPath path)
         {
-            return System.IO.File.Exists(path.Path);
+            return System.IO.File.Exists(path.Raw);
         }
 
         protected override bool DirectoryExistsImplementation(NPath path)
         {
-            return System.IO.Directory.Exists(path.Path);
+            return System.IO.Directory.Exists(path.Raw);
         }
 
         protected override IEnumerable<File> EnumerateFileEntriesImplementation(NPath path)
         {
-            var files = System.IO.Directory.GetFiles(path.Path);
+            var files = System.IO.Directory.GetFiles(path.Raw);
 
             foreach (var file in files)
             {
@@ -45,7 +45,7 @@ namespace NFS
 
         protected override IEnumerable<Directory> EnumerateDirectoriesImplementation(NPath path)
         {
-            var directories = System.IO.Directory.GetDirectories(path.Path);
+            var directories = System.IO.Directory.GetDirectories(path.Raw);
 
             foreach (var directory in directories)
             {
@@ -59,23 +59,33 @@ namespace NFS
 
         protected override void DeleteDirectoryImplementation(NPath path, bool isRecursive)
         {
-            var folder = new DirectoryInfo(path.Path);
+            var folder = new DirectoryInfo(path.Raw);
             folder.Delete(isRecursive);
         }
 
         protected override void DeleteFileImplementation(NPath path)
         {
-            var file = new FileInfo(path.Path);
+            var file = new FileInfo(path.Raw);
             file.Delete();
         }
 
         protected override NPath PathCombineImplementation(NPath path1, NPath path2)
         {
             var path = Path.Combine(
-                path1.Path,
-                path2.Path);
+                path1.Raw,
+                path2.Raw);
 
             return new NPath(path);
+        }
+
+        protected override void MoveDirectoryImplementation(NPath srcPath, NPath destPath)
+        {
+            System.IO.Directory.Move(srcPath.Raw, destPath.Raw);
+        }
+
+        protected override void MoveFileImplementation(NPath srcPath, NPath destPath)
+        {
+            System.IO.File.Move(srcPath.Raw, destPath.Raw);
         }
     }
 }

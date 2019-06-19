@@ -10,6 +10,7 @@ namespace Domain.FileSystem
         Task<List<TreeDTO>> GetStructureAsync();
         Task<object> UploadFileAsync(UploadFileState state);
         Task<object> RemoveAsync(RemoveState state);
+        Task<object> RenameAsync(RenameState state);
         Task<Stream> DownloadFileAsync(DownloadFileState state);
     }
 }

@@ -40,9 +40,9 @@ namespace Domain.Commands
 
                 Result = new FileUploadResult(true, new
                 {
-                    folder = state.Target.Path,
-                    value = state.FileName.Path,
-                    id = state.FileName.Path,
+                    folder = state.Target.Raw,
+                    value = state.FileName.Raw,
+                    id = state.FileName.Raw,
                     type = NodeType.File,
                     status = "server"
                 });

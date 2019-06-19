@@ -35,6 +35,9 @@ namespace Web
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
             services.AddScoped<
+                IRenameCommand<RenameResult, bool, RenameState>,
+                RenameCommand>();
+            services.AddScoped<
                 IDownloadFileCommand<FileDownloadResult, Stream, DownloadFileState>,
                 DownloadFileCommand>();
             services.AddScoped<

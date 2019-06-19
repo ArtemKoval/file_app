@@ -12,7 +12,7 @@ namespace NFS
         }
 
         public string Name { get; private set; }
-        public string FullName => Path.Path;
+        public string FullName => Path.Raw;
         public long Length { get; private set; }
         public NPath Path { get; private set; }
     }

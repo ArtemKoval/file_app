@@ -25,7 +25,7 @@ namespace Domain.Commands
         {
             try
             {
-                var targets = state.Target.Path.Split(",");
+                var targets = state.Target.Raw.Split(",");
 
                 foreach (var target in targets)
                 {

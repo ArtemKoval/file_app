@@ -25,9 +25,14 @@ namespace NFS
             return DirectoryExistsImplementation(path);
         }
 
-        public void MoveDirectory(NPath srcPath, NPath destPath)
+        protected virtual void MoveDirectoryImplementation(NPath srcPath, NPath destPath)
         {
             throw new NotImplementedException();
+        }
+
+        public void MoveDirectory(NPath srcPath, NPath destPath)
+        {
+            MoveDirectoryImplementation(srcPath, destPath);
         }
 
         protected virtual void DeleteDirectoryImplementation(NPath path, bool isRecursive)
@@ -50,9 +55,14 @@ namespace NFS
             throw new NotImplementedException();
         }
 
-        public void MoveFile(NPath srcPath, NPath destPath)
+        protected virtual void MoveFileImplementation(NPath srcPath, NPath destPath)
         {
             throw new NotImplementedException();
+        }
+        
+        public void MoveFile(NPath srcPath, NPath destPath)
+        {
+            MoveFileImplementation(srcPath, destPath);
         }
 
         protected virtual bool FileExistsImplementation(NPath path)

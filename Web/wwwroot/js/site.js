@@ -8,7 +8,8 @@ webix.ready(function () {
         handlers: {
             "download": "api/download",
             "upload": "api/upload",
-            "remove": "api/remove"
+            "remove": "api/remove",
+            "rename": "api/rename"
         },
         on: {
             'onViewInit': function (name, config) {
